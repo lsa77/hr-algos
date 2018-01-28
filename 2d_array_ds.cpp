@@ -1,11 +1,31 @@
 
 #include <vector>
 #include <iostream>
+#include <tuple>
 
 using namespace std;
 
 typedef vector<int> Vec;
 typedef vector<Vec> Mat;
+
+Mat extract_sub_matrix(const Mat &src, const tuple<int,int> &adr, const int &size) {
+  
+  Mat prod;
+  Vec vTmp;
+
+  for(int i=get<0>(adr); i< get<0>(adr) + size; i++){ 
+    vTmp.clear(); 
+    for(int j=get<1>(adr); j< get<1>(adr) + size; j++) {
+      //cout << endl << i << " , " << j; 
+      vTmp.push_back(src[i][j]);
+    }
+    prod.push_back(vTmp);
+  }
+
+  return prod;
+
+}
+
 
 
 Mat operator*(const Mat &a, const Mat &b){
@@ -124,13 +144,55 @@ ostream& operator<<(ostream& os, const Vec& x)
     return os;  
 }  
 
+int hourGlassValue3x3( const Mat& A){
+
+  int sum = 0;
+  for(int i=0;i<3;i++)
+    for(int j=0;j<3;j++){
+      if  (((i==1) &&(j==0)) ||
+           ((i==1) &&(j==2)) ) ;else
+          sum += A[i][j];
+
+    }
+
+  return sum;
+}
 
 int main(){
-    vector< vector<int> > arr(6,vector<int>(6));
+    Mat arr(6, Vec(6) );
+    Mat sub1;
+    
+    tuple<int, int>   adr;
+    
+    int  maxHourglass  = 0;
+    int  _tmpHGL       = 0;
+    bool _first        = false;
+
     for(int arr_i = 0;arr_i < 6;arr_i++){
        for(int arr_j = 0;arr_j < 6;arr_j++){
           cin >> arr[arr_i][arr_j];
        }
     }
+
+    //cout <<endl<<"arr:"<< arr;
+
+    for(int i=0; i<4;i++)
+      for(int j=0;j<4;j++) {
+        
+        adr = make_tuple(i,j);
+        
+        sub1 = extract_sub_matrix(arr, adr, 3);
+        _tmpHGL = hourGlassValue3x3(sub1);
+        
+          if ((_tmpHGL > maxHourglass) || (_first == false)) {
+              _first = true;
+              maxHourglass = _tmpHGL;
+              //cout <<endl<<"sub1:"<< sub1;
+              cout << endl <<  _tmpHGL;
+          }
+      }
+    cout << maxHourglass;
+    
+
     return 0;
 }
