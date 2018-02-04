@@ -188,7 +188,7 @@ int main(){
               _first = true;
               maxHourglass = _tmpHGL;
               //cout <<endl<<"sub1:"<< sub1;
-              cout << endl <<  _tmpHGL;
+              //cout << endl <<  _tmpHGL;
           }
       }
     cout << maxHourglass;
